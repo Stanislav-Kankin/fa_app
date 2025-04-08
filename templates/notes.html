@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Мои заметки</h1>
+    
+    <div class="note-form">
+        <h2>Создать новую заметку</h2>
+        <form action="/notes/create" method="post">
+            <div class="form-group">
+                <label for="title">Заголовок:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Содержание:</label>
+                <textarea id="content" name="content" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="note_date">Дата (необязательно):</label>
+                <input type="date" id="note_date" name="note_date" value="{{ today }}">
+            </div>
+            <button type="submit" class="btn">Создать заметку</button>
+        </form>
+    </div>
+    
+    <div class="notes-list">
+        <h2>Все заметки</h2>
+        {% if notes %}
+        <ul>
+            {% for note in notes %}
+            <li class="note-item">
+                <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
+                <p class="note-date">
+                    Создано: {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}
+                    {% if note.updated_at != note.created_at %}
+                    (изменено: {{ note.updated_at.strftime('%d.%m.%Y %H:%M') }})
+                    {% endif %}
+                    {% if note.note_date %}
+                    - Дата заметки: {{ note.note_date.strftime('%d.%m.%Y') }}
+                    {% endif %}
+                </p>
+                <div class="note-preview">{{ note.content[:100] }}{% if note.content|length > 100 %}...{% endif %}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>У вас пока нет заметок.</p>
+        {% endif %}
+    </div>
+    
+    <div class="back-link">
+        <a href="/" class="btn">На главную</a>
+    </div>
+</div>
+{% endblock %}

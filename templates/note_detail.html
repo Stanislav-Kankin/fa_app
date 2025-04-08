@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Редактирование заметки</h1>
+    
+    <form action="/notes/update/{{ note.id }}" method="post">
+        <div class="form-group">
+            <label for="title">Заголовок:</label>
+            <input type="text" id="title" name="title" value="{{ note.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Содержание:</label>
+            <textarea id="content" name="content" rows="10" required>{{ note.content }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="note_date">Дата:</label>
+            <input type="date" id="note_date" name="note_date" 
+                   value="{{ note.note_date.strftime('%Y-%m-%d') if note.note_date else '' }}">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn">Сохранить</button>
+            <a href="/notes" class="btn">Отмена</a>
+            <form action="/notes/delete/{{ note.id }}" method="post" style="display: inline;">
+                <button type="submit" class="btn danger">Удалить</button>
+            </form>
+        </div>
+    </form>
+    
+    <div class="back-link">
+        <a href="/notes" class="btn">К списку заметок</a>
+    </div>
+</div>
+{% endblock %}

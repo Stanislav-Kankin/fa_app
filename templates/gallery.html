@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Моя галерея</h1>
+    <div class="upload-form">
+        <h2>Добавить файл</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="file" accept="image/*,video/*" required>
+            </div>
+            <button type="submit" class="btn">Загрузить</button>
+        </form>
+    </div>
+    
+    {% if error %}
+    <div class="alert error">{{ error }}</div>
+    {% endif %}
+    
+    <div class="media-grid">
+        {% for item in media_items %}
+        <div class="media-item">
+            {% if item.media_type == 'image' %}
+            <img src="/{{ item.filepath }}" alt="{{ item.filename }}">
+            {% else %}
+            <video controls>
+                <source src="/{{ item.filepath }}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+            {% endif %}
+            <div class="media-actions">
+                <form action="/delete_media/{{ item.id }}" method="post">
+                    <button type="submit" class="btn small danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <p>В вашей галерее пока нет файлов.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="back-link">
+        <a href="/" class="btn">На главную</a>
+    </div>
+</div>
+{% endblock %}

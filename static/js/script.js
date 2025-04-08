@@ -1,12 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Можно добавить любую клиентскую логику здесь
-    console.log('Приложение загружено');
-    
-    // Пример: обработка кликов по кнопкам
-    const buttons = document.querySelectorAll('.btn, .dashboard-btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            console.log('Нажата кнопка:', this.textContent);
+    // Подтверждение удаления
+    const deleteForms = document.querySelectorAll('form[action^="/delete_"]');
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Вы уверены, что хотите удалить этот элемент?')) {
+                e.preventDefault();
+            }
         });
     });
+    
+    // Подсветка сегодняшней даты в календаре
+    const todayCells = document.querySelectorAll('.calendar td.today');
+    todayCells.forEach(cell => {
+        cell.innerHTML = `<strong>${cell.textContent}</strong>`;
+    });
+    
+    // Быстрое создание заметки на выбранную дату в календаре
+    const noteDateInput = document.getElementById('note_date');
+    if (noteDateInput) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const dateParam = urlParams.get('date');
+        if (dateParam) {
+            noteDateInput.value = dateParam;
+        }
+    }
 });

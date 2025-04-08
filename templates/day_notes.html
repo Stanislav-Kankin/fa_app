@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Заметки за {{ day_date.strftime('%d.%m.%Y') }}</h1>
+    
+    {% if notes %}
+    <ul class="day-notes-list">
+        {% for note in notes %}
+        <li class="note-item">
+            <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
+            <p class="note-date">
+                Создано: {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}
+                {% if note.updated_at != note.created_at %}
+                (изменено: {{ note.updated_at.strftime('%d.%m.%Y %H:%M') }})
+                {% endif %}
+            </p>
+            <div class="note-preview">{{ note.content[:100] }}{% if note.content|length > 100 %}...{% endif %}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>В этот день нет заметок.</p>
+    {% endif %}
+    
+    <div class="back-link">
+        <a href="/calendar" class="btn">Вернуться в календарь</a>
+    </div>
+</div>
+{% endblock %}
