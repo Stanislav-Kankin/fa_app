@@ -157,7 +157,7 @@ async def gallery_page(
         "media_items": media_items
     })
 
-@app.post("/upload", response_class=HTMLResponse)
+@app.post("/upload")
 async def upload_file(
     request: Request,
     file: UploadFile = File(...),
@@ -177,18 +177,22 @@ async def upload_file(
         return templates.TemplateResponse("gallery.html", {
             "request": request,
             "username": current_user.username,
-            "error": "Неподдерживаемый тип файла"
+            "error": "Неподдерживаемый тип файла. Разрешены только изображения и видео."
         })
     
+    # Создаём уникальное имя файла
+    file_ext = os.path.splitext(file.filename)[1]
+    unique_filename = f"{datetime.now().timestamp()}{file_ext}"
+    file_path = os.path.join("uploads", unique_filename)
+    
     # Сохраняем файл
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
     # Сохраняем в БД
     new_media = Media(
         filename=file.filename,
-        filepath=file_path,
+        filepath=f"uploads/{unique_filename}",
         media_type=media_type,
         owner_id=current_user.id
     )

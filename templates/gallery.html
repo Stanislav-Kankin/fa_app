@@ -2,14 +2,22 @@
 
 {% block content %}
 <div class="container">
+    <div class="header-with-back">
+        <h1>Моя галерея</h1>
+        <a href="/" class="btn back-btn"><i class="fas fa-arrow-left"></i> На главную</a>
+    </div>
+<div class="container">
     <h1>Моя галерея</h1>
     <div class="upload-form">
-        <h2>Добавить файл</h2>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="file" name="file" accept="image/*,video/*" required>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="upload-box">
+            <div class="file-upload-wrapper">
+                <input type="file" name="file" id="file-upload" accept="image/*,video/*" required>
+                <label for="file-upload" class="file-upload-label">
+                    <span class="upload-icon">+</span>
+                    <span class="upload-text">Выберите файл или перетащите его сюда</span>
+                </label>
             </div>
-            <button type="submit" class="btn">Загрузить</button>
+            <button type="submit" class="btn upload-btn">Загрузить</button>
         </form>
     </div>
     
@@ -19,28 +27,32 @@
     
     <div class="media-grid">
         {% for item in media_items %}
-        <div class="media-item">
-            {% if item.media_type == 'image' %}
-            <img src="/{{ item.filepath }}" alt="{{ item.filename }}">
-            {% else %}
-            <video controls>
-                <source src="/{{ item.filepath }}" type="video/mp4">
-                Ваш браузер не поддерживает видео.
-            </video>
-            {% endif %}
-            <div class="media-actions">
-                <form action="/delete_media/{{ item.id }}" method="post">
-                    <button type="submit" class="btn small danger">Удалить</button>
-                </form>
+        <div class="media-card">
+            <div class="media-preview-container">
+                {% if item.media_type == 'image' %}
+                <img src="/{{ item.filepath }}" alt="{{ item.filename }}" class="media-preview">
+                {% else %}
+                <div class="video-preview">
+                    <video class="media-preview">
+                        <source src="/{{ item.filepath }}" type="video/mp4">
+                    </video>
+                    <div class="play-icon">▶</div>
+                </div>
+                {% endif %}
+                <div class="media-overlay">
+                    <span class="media-filename">{{ item.filename }}</span>
+                    <form action="/delete_media/{{ item.id }}" method="post" class="delete-form">
+                        <button type="submit" class="delete-btn" title="Удалить">×</button>
+                    </form>
+                </div>
             </div>
         </div>
         {% else %}
-        <p>В вашей галерее пока нет файлов.</p>
+        <div class="empty-gallery">
+            <p>Ваша галерея пуста</p>
+            <p>Загрузите первые файлы</p>
+        </div>
         {% endfor %}
-    </div>
-    
-    <div class="back-link">
-        <a href="/" class="btn">На главную</a>
     </div>
 </div>
 {% endblock %}
