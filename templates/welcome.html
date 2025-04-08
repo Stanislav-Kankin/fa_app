@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Добро пожаловать, {{ username }}!</h1>
+    {% if message %}
+    <div class="alert info">{{ message }}</div>
+    {% endif %}
+    <div class="dashboard">
+        <a href="/gallery" class="dashboard-btn">Моя галерея</a>
+        <a href="/notes" class="dashboard-btn">Мои заметки</a>
+        <a href="/calendar" class="dashboard-btn">Мой календарь</a>
+    </div>
+    <div class="logout">
+        <a href="/logout" class="btn">Выйти</a>
+    </div>
+</div>
+{% endblock %}
